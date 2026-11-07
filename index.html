@@ -80,6 +80,7 @@ function addO(){const a=parseFloat(document.getElementById('oa').value);if(!(a>0
 S.out.unshift({id:Date.now()+'',mo:document.getElementById('om').value||cur(),a,c:document.getElementById('oc').value});save();msg('Salida guardada');draw()}
 function setCfg(){S.cost=parseFloat(document.getElementById('cost').value)||S.cost;S.start=document.getElementById('st').value||S.start;
 S.members=document.getElementById('mem').value.split('\n').map(x=>x.trim()).filter(Boolean);S.accounts=document.getElementById('acc').value.split('\n').map(x=>x.trim()).filter(Boolean);save();msg('Guardado');draw()}
+async function upd(){try{const r=await navigator.serviceWorker.getRegistrations();for(const x of r)await x.unregister();for(const k of await caches.keys())await caches.delete(k)}catch(e){}location.reload()}
 function imp(){try{S=JSON.parse(document.getElementById('bk').value);save();draw()}catch(e){alert('Datos no válidos')}}
 function draw(){
 const T=[['ini','🏠','Inicio'],['pag','💰','Pagos'],['per','👤','Persona'],['out','💸','Salidas'],['cfg','⚙️','Ajustes']];
@@ -113,7 +114,8 @@ if(V.tab=='cfg'){h+=`<div class="card"><span class="lb">Costo mensual de la susc
 <span class="lb">Personas (una por línea)</span><textarea id="mem" rows="5">${S.members.map(E).join('\n')}</textarea>
 <span class="lb">Cuentas (una por línea)</span><textarea id="acc" rows="4">${S.accounts.map(E).join('\n')}</textarea>
 <button class="btn" onclick="setCfg()">Guardar ajustes</button><div class="tag" style="margin-top:8px">La cuota se calcula sola. No cambies el orden de los nombres si ya hay pagos.</div></div>
-<div class="card"><h2>Respaldo</h2><textarea id="bk" rows="4">${E(JSON.stringify(S))}</textarea><button class="btn" onclick="imp()">Restaurar desde este texto</button><div class="tag" style="margin-top:8px">Copia ese texto y guárdalo en Notas.</div></div>`}
+<div class="card"><h2>Respaldo</h2><textarea id="bk" rows="4">${E(JSON.stringify(S))}</textarea><button class="btn" onclick="imp()">Restaurar desde este texto</button></div>
+<div class="card"><h2>Versión 4</h2><button class="btn" onclick="upd()">Actualizar app</button><div class="tag" style="margin-top:8px">Si ves el menú abajo o no ves los cambios, toca este botón.<div class="tag" style="margin-top:8px">Copia ese texto y guárdalo en Notas.</div></div>`}
 document.getElementById('v').innerHTML=h}
 draw();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
